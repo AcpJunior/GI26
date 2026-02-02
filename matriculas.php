@@ -135,6 +135,7 @@ if ($matriculas_abertas && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 <a href="index.php" class="btn" style="width:auto;">Voltar para Home</a>
             </div>
         </div>
+        <div class="success-msg" style="margin-top:20px;">Processo finalizado com sucesso.</div>
     <?php else: ?>
         <?php if ($erro): ?>
             <div class="error-msg" style="margin-bottom:20px;"><?php echo $erro; ?></div>

@@ -13,6 +13,11 @@ if ($step !== 'nova') {
     $step = intval($step);
 }
 
+// Modo unificado: sempre renderizar o formulário de matrícula nesta página
+if ($unificacao && $_SERVER['REQUEST_METHOD'] !== 'POST') {
+    $step = 'nova';
+}
+
 $user = null;
 $userId = intval($_POST['user_id'] ?? 0);
 $nomeBusca = trim($_POST['nome_busca'] ?? '');
@@ -23,13 +28,8 @@ function normId($v){ return preg_replace('/[^0-9A-Za-z]+/', '', strtolower(trim(
 function sameDate($a, $b){ $da = strtotime($a); $db = strtotime($b); if(!$da || !$db) return false; return date('Y-m-d', $da) === date('Y-m-d', $db); }
 
 if ($abertas && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Verificar se usuário clicou em "Fazer Nova Matrícula"
-    if (isset($_POST['action']) && $_POST['action'] === 'nova_matricula' && $unificacao) {
-        $step = 'nova';
-    }
-    
-    // Lógica para Nova Matrícula (Cópia adaptada de matriculas.php)
-    elseif ($step === 'nova' && $unificacao) {
+    // Lógica para Nova Matrícula (Unificação ativa)
+    if ($unificacao && $step === 'nova') {
         $missing = [];
         $nome = $_POST['nome'] ?? '';
         $nome_social = $_POST['nome_social'] ?? '';
@@ -267,6 +267,7 @@ if ($abertas && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 <a href="index.php" class="btn" style="width:auto;">Voltar para Home</a>
             </div>
         </div>
+        <div class="success-msg" style="margin-top:20px;">Processo finalizado com sucesso.</div>
     <?php elseif ($sucessoNova): ?>
         <div class="message-box">
             <div class="dev-icon">
@@ -278,6 +279,7 @@ if ($abertas && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 <a href="index.php" class="btn" style="width:auto;">Voltar para Home</a>
             </div>
         </div>
+        <div class="success-msg" style="margin-top:20px;">Processo finalizado com sucesso.</div>
     <?php else: ?>
         <?php if ($erro): ?>
             <div class="error-msg" style="margin-bottom:20px;"><?php echo $erro; ?></div>
