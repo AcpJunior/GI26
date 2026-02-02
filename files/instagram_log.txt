@@ -1,0 +1,14 @@
+[2026-01-30 14:45:29] fetch start user=grupo_independance limit=6 force=1
+[2026-01-30 14:45:29] skipping cache by force
+[2026-01-30 14:45:29] graph attempt http=200 resp_len=11531
+[2026-01-30 14:45:29] graph items=6
+[2026-01-30 14:45:35] fetch start user=grupo_independance limit=6 force=1
+[2026-01-30 14:45:35] skipping cache by force
+[2026-01-30 14:45:35] graph attempt http=200 resp_len=11531
+[2026-01-30 14:45:35] graph items=6
+[2026-01-30 14:45:39] fetch start user=grupo_independance limit=6 force=0
+[2026-01-30 14:45:39] using cache count=6
+[2026-01-30 17:54:31] fetch start user= limit=1 force=1
+[2026-01-30 17:54:31] skipping cache by force
+[2026-01-30 17:58:36] ig_image request: u=https://instagram.com/static/images/web/mobile_nav...
+[2026-01-30 17:58:37] ig_image success: code=200 len=2150

@@ -1,0 +1,84 @@
+
+/* Responsividade Dashboard Mobile */
+@media (max-width: 768px) {
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .dashboard-header .btn {
+        width: 100% !important;
+        justify-content: center;
+    }
+
+    .dashboard-header div {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    /* Transformar tabela em cards */
+    .dashboard-table thead {
+        display: none;
+    }
+
+    .dashboard-table, .dashboard-table tbody, .dashboard-table tr, .dashboard-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .dashboard-table tr {
+        margin-bottom: 20px;
+        background: var(--white);
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        border: 1px solid #eee;
+        overflow: hidden;
+    }
+
+    .dashboard-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: right;
+        padding: 15px;
+        border-bottom: 1px solid #f0f0f0;
+        min-height: 50px;
+    }
+
+    .dashboard-table td:last-child {
+        border-bottom: none;
+        justify-content: center;
+        background-color: #f9f9f9;
+    }
+
+    .dashboard-table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #999;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        margin-right: 15px;
+        text-align: left;
+    }
+
+    /* Ajuste específico para coluna de Ações */
+    .dashboard-table td[data-label="Ações"]::before {
+        display: none;
+    }
+    
+    .dashboard-table td[data-label="Ações"] {
+        padding: 10px;
+    }
+
+    .dashboard-table td[data-label="Ações"] div {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .dashboard-table td[data-label="Ações"] .btn {
+        flex: 1;
+        text-align: center;
+        padding: 10px;
+    }
+}
