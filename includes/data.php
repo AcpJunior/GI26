@@ -14,7 +14,12 @@ function pdoDisponivel() {
 }
 
 function getSiteConfig() {
-    $defaultConfig = ['matriculas_abertas' => false, 'rematriculas_abertas' => false];
+    $defaultConfig = [
+        'matriculas_abertas' => false, 
+        'rematriculas_abertas' => false,
+        'rematricula_busca_avancada' => true,
+        'usar_rematricula_como_matricula' => false
+    ];
     if (pdoDisponivel()) {
         try {
             global $pdo;
@@ -30,6 +35,12 @@ function getSiteConfig() {
             }
             if (isset($map['rematriculas_abertas'])) {
                 $cfg['rematriculas_abertas'] = intval($map['rematriculas_abertas']) === 1;
+            }
+            if (isset($map['rematricula_busca_avancada'])) {
+                $cfg['rematricula_busca_avancada'] = intval($map['rematricula_busca_avancada']) === 1;
+            }
+            if (isset($map['usar_rematricula_como_matricula'])) {
+                $cfg['usar_rematricula_como_matricula'] = intval($map['usar_rematricula_como_matricula']) === 1;
             }
             return $cfg;
         } catch (PDOException $e) {
@@ -252,6 +263,17 @@ function igLog($msg) {
     $file = $logDir . '/instagram_log.txt';
     $line = '[' . date('Y-m-d H:i:s') . '] ' . $msg . "\n";
     @file_put_contents($file, $line, FILE_APPEND);
+}
+
+function getAlunosPendentes() {
+    global $pdo;
+    if (!pdoDisponivel()) return [];
+    try {
+        $stmt = $pdo->query("SELECT * FROM alunos WHERE status = 'Pendente' ORDER BY nome ASC");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        return [];
+    }
 }
 
 function getUsuarioPorId($id) {

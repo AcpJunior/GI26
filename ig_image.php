@@ -3,7 +3,8 @@ error_reporting(0);
 ini_set('display_errors', 0);
 require_once __DIR__ . '/includes/data.php';
 
-$u = isset($_GET['u']) ? $_GET['u'] : '';
+// Recebe em Base64 e decodifica de volta para URL
+$u = isset($_GET['u']) ? base64_decode($_GET['u']) : '';
 
 if (!$u) { http_response_code(400); exit; }
 

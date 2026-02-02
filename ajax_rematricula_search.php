@@ -30,8 +30,8 @@ $termNorm = normalizeString($term);
 $termParts = array_filter(explode(' ', $termNorm));
 
 foreach ($users as $u) {
-    // Ignora cancelados
-    if (isset($u['status']) && $u['status'] === 'Cancelado') continue;
+    // Ignora cancelados e já rematriculados (apenas Pendente)
+    if (isset($u['status']) && $u['status'] !== 'Pendente') continue;
     
     $name = $u['nome'];
     $nameNorm = normalizeString($name);
@@ -42,7 +42,7 @@ foreach ($users as $u) {
     // 1. Match Exato
     if ($nameNorm === $termNorm) {
         $score = 100;
-        $results[] = ['id' => $u['id'], 'nome' => $name, 'score' => $score];
+        $results[] = ['id' => $u['id'], 'nome' => $name, 'score' => $score, 'is_exact' => true];
         continue;
     }
     
@@ -65,7 +65,7 @@ foreach ($users as $u) {
         // Vamos usar similar_text para refinar o score entre 80 e 99
         similar_text($termNorm, $nameNorm, $perc);
         $score = 80 + ($perc * 0.19); // Garante entre 80 e 99
-        $results[] = ['id' => $u['id'], 'nome' => $name, 'score' => $score];
+        $results[] = ['id' => $u['id'], 'nome' => $name, 'score' => $score, 'is_exact' => false];
         continue;
     }
     
@@ -74,13 +74,16 @@ foreach ($users as $u) {
     
     // Se a similaridade for alta o suficiente, ou se encontrou parte significativa
     if ($perc > 65) {
-        $results[] = ['id' => $u['id'], 'nome' => $name, 'score' => $perc];
+        $results[] = ['id' => $u['id'], 'nome' => $name, 'score' => $perc, 'is_exact' => false];
     }
 }
 
 // Ordenar por score decrescente
 usort($results, function($a, $b) {
-    return $b['score'] <=> $a['score'];
+    if ($a['score'] == $b['score']) {
+        return 0; 
+    }
+    return ($a['score'] < $b['score']) ? 1 : -1;
 });
 
 // Limitar resultados e retornar

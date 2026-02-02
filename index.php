@@ -15,8 +15,22 @@ include 'includes/header.php';
                     <div class="insta-img-wrapper">
                         <a href="<?php echo htmlspecialchars($p['permalink']); ?>" target="_blank" rel="noopener">
                             <?php
-                            $srcRaw = isset($p['media_url']) && $p['media_url'] ? $p['media_url'] : '';
-                            $src = $srcRaw ? ('ig_image.php?u=' . urlencode($srcRaw)) : "https://placehold.co/400x400/E0B0B6/white?text=Ballet+Post";
+                            // AJUSTE 1: Lógica para pegar a capa se for vídeo
+                            $mediaUrl = $p['media_url'] ?? '';
+                            $mediaType = $p['media_type'] ?? 'IMAGE'; // Padrão é IMAGE se não vier nada
+                            $thumbnailUrl = $p['thumbnail_url'] ?? ''; // Campo novo que você pediu na API
+
+                            if ($mediaType === 'VIDEO' && !empty($thumbnailUrl)) {
+                                // Se for vídeo, usa a miniatura
+                                $srcRaw = $thumbnailUrl;
+                            } else {
+                                // Se for foto ou album, usa a URL normal
+                                $srcRaw = $mediaUrl;
+                            }
+
+                            // AJUSTE 2: Codificação em Base64 para passar pelo Firewall da Hostgator
+                            // Se $srcRaw existir, codifica. Se não, usa o placeholder.
+                            $src = $srcRaw ? ('ig_image.php?u=' . base64_encode($srcRaw)) : "https://placehold.co/400x400/E0B0B6/white?text=Ballet+Post";
                             ?>
                             <img src="<?php echo $src; ?>" alt="Instagram Post">
                         </a>

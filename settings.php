@@ -29,10 +29,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if (isset($_POST['update_rematriculas'])) {
         $abertas = isset($_POST['rematriculas_abertas']) ? true : false;
+        $buscaAvancada = isset($_POST['rematricula_busca_avancada']) ? true : false;
+        $comoMatricula = isset($_POST['usar_rematricula_como_matricula']) ? true : false;
         if (function_exists('updateSiteConfig')) {
-            if (updateSiteConfig('rematriculas_abertas', $abertas)) {
-                $msg = "<div class='success-msg'>Status das rematrículas atualizado.</div>";
+            $ok1 = updateSiteConfig('rematriculas_abertas', $abertas);
+            $ok2 = updateSiteConfig('rematricula_busca_avancada', $buscaAvancada);
+            $ok3 = updateSiteConfig('usar_rematricula_como_matricula', $comoMatricula);
+            if ($ok1 && $ok2 && $ok3) {
+                $msg = "<div class='success-msg'>Configurações de rematrícula atualizadas.</div>";
                 $config['rematriculas_abertas'] = $abertas;
+                $config['rematricula_busca_avancada'] = $buscaAvancada;
+                $config['usar_rematricula_como_matricula'] = $comoMatricula;
             } else {
                 $msg = "<div class='error-msg'>Falha ao atualizar configuração.</div>";
             }
@@ -143,6 +150,29 @@ if (file_exists($logPath)) {
                             <?php echo ($config['rematriculas_abertas'] ?? false) ? 'Rematrículas Abertas' : 'Rematrículas Fechadas'; ?>
                         </span>
                     </div>
+                    <div class="switch-row" style="margin-top:15px; border-top:1px solid #eee; padding-top:15px;">
+                        <label class="switch">
+                            <input type="checkbox" name="rematricula_busca_avancada" <?php echo ($config['rematricula_busca_avancada'] ?? true) ? 'checked' : ''; ?>>
+                            <span class="slider"></span>
+                        </label>
+                        <span class="status-pill <?php echo ($config['rematricula_busca_avancada'] ?? true) ? 'blue' : 'gray'; ?>">
+                            <?php echo ($config['rematricula_busca_avancada'] ?? true) ? 'Busca Avançada (Fuzzy)' : 'Modo Lista Simples'; ?>
+                        </span>
+                    </div>
+                    <div class="switch-row" style="margin-top:15px; border-top:1px solid #eee; padding-top:15px;">
+                        <label class="switch">
+                            <input type="checkbox" name="usar_rematricula_como_matricula" <?php echo ($config['usar_rematricula_como_matricula'] ?? false) ? 'checked' : ''; ?>>
+                            <span class="slider"></span>
+                        </label>
+                        <span class="status-pill <?php echo ($config['usar_rematricula_como_matricula'] ?? false) ? 'orange' : 'gray'; ?>">
+                            <?php echo ($config['usar_rematricula_como_matricula'] ?? false) ? 'Modo Matrícula Unificada (Novo)' : 'Modo Padrão (Matrícula/Rematrícula)'; ?>
+                        </span>
+                    </div>
+                    <p class="muted">
+                        <strong>Busca Avançada:</strong> Permite digitar o nome e busca por similaridade.<br>
+                        <strong>Modo Lista Simples:</strong> Exibe uma lista com nomes dos alunos pendentes para seleção.<br>
+                        <strong>Modo Matrícula Unificada:</strong> Substitui o link de Rematrícula por Matrícula (novos alunos).
+                    </p>
                     <div class="form-actions">
                         <input type="hidden" name="update_rematriculas" value="1">
                         <button type="submit" class="btn" style="background-color: var(--primary-color);">Salvar Status</button>
